@@ -1,0 +1,12 @@
+name: drupal-testing
+recipe: drupal10
+config:
+  webroot: web
+  php: 8.2
+services:
+  # Replaces default lando MariaDB image with arm64 (Apple M1) compatible one.
+  # TODO: remove database service overrides once lando is updated.
+  database:
+    type: mysql:custom
+    overrides:
+      image: bitnami/mysql:5.7.43
