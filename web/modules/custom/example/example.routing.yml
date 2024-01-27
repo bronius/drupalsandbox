@@ -1,7 +1,7 @@
 example.blog:
   path: /blog
   defaults:
-    _controller: Drupal\example\Controller\BlogPageController
+    _controller: Drupal\example\BlogPageController
     _title: Blog
   requirements:
     _permission: access content

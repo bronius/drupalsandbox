@@ -12,8 +12,7 @@ class BlogPageTest extends BrowserTestBase {
   protected static $modules = ['node', 'example'];
 
   public function testBlogPage(): void {
-    $out = $this->drupalGet('/blog');
-    var_dump($out);
+    $this->drupalGet('/blog');
 
     $this->assertSession()->statusCodeEquals(Response::HTTP_OK);
 

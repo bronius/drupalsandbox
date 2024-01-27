@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\example\Controller;
+namespace Drupal\example;
 
 class BlogPageController {
 
