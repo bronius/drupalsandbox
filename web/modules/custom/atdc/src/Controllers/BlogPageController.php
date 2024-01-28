@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\example;
+namespace Drupal\atdc\Controllers;
 
 use Drupal\Core\Controller\ControllerBase;
 
