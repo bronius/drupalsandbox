@@ -17,4 +17,20 @@ class BlogPageTest extends BrowserTestBase {
     $this->assertSession()->statusCodeEquals(Response::HTTP_OK);
 
   }
+
+  public function testPostsAreVisible(): void {
+    // Arrange.
+    $this->createNode(['type' => 'post', 'title' => 'First post']);
+    $this->createNode(['type' => 'post', 'title' => 'Second post']);
+    $this->createNode(['type' => 'post', 'title' => 'Third post']);
+
+    // Act.
+    $this->drupalGet('/blog');
+
+    // Assert.
+    $assert = $this->assertSession();
+    $assert->pageTextContains('First post');
+    $assert->pageTextContains('Second post');
+    $assert->pageTextContains('Third post');
+  }
 }
