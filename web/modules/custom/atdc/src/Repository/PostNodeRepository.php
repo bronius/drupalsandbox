@@ -19,6 +19,10 @@ final class PostNodeRepository {
     $nodeStorage = $this->entityTypeManager->getStorage('node');
     $nodes = $nodeStorage->loadMultiple();
 
-    return $nodes;
+    uasort($nodes, function (NodeInterface $a, NodeInterface $b): int {
+      return $a->getCreatedTime() <=> $b->getCreatedTime();
+    });
+
+    return array_values($nodes);
   }
 }
