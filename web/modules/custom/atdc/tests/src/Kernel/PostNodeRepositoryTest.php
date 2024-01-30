@@ -2,8 +2,8 @@
 
 namespace Drupal\Tests\atdc\Kernel;
 
+use Drupal\atdc\Builder\PostBuilder;
 use Drupal\atdc\Repository\PostNodeRepository;
-use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
 use Drupal\node\NodeInterface;
 use Drupal\Tests\node\Traits\NodeCreationTrait;
@@ -16,23 +16,20 @@ class PostNodeRepositoryTest extends EntityKernelTestBase {
 
   public function testpostsAreReturnedByCreatedDate(): void {
     // Arrange.
-    $this->createNode([
-      'created' => (new DrupalDateTime('-1 week'))->getTimestamp(),
-      'title' => 'Post one',
-      'type' => 'post',
-    ]);
+    PostBuilder::create()
+      ->setCreated('-1 week')
+      ->setTitle('Post one')
+      ->getPost();
 
-    $this->createNode([
-      'created' => (new DrupalDateTime('-8 days'))->getTimestamp(),
-      'title' => 'Post two',
-      'type' => 'post',
-    ]);
+    PostBuilder::create()
+      ->setCreated('-8 days')
+      ->setTitle('Post two')
+      ->getPost();
 
-    $this->createNode([
-      'created' => (new DrupalDateTime('yesterday'))->getTimestamp(),
-      'title' => 'Post three',
-      'type' => 'post',
-    ]);
+    PostBuilder::create()
+      ->setCreated('yesterday')
+      ->setTitle('Post three')
+      ->getPost();
 
     // Act.
     $postRepository = $this->container->get(PostNodeRepository::class);
@@ -41,9 +38,22 @@ class PostNodeRepositoryTest extends EntityKernelTestBase {
 
     // Assert.
     self::assertCount(3, $nodes);
+    self::assertNodeTitlesAreSame(['Post two', 'Post one', 'Post three'], $nodes);
+  }
+
+  /**
+   * @param array<int, string> $expectedTitles
+   * @param array<int, NodeInterface> $nodes
+   * @return void
+   */
+  private static function assertNodeTitlesAreSame(
+    array $expectedTitles,
+    array $nodes,
+  ): void {
     self::assertSame(
-      ['Post two', 'Post one', 'Post three'],
-      array_map(fn (NodeInterface $node) => $node->label(),
+      $expectedTitles,
+      array_map(
+        fn (NodeInterface $node) => $node->label(),
         $nodes
       )
     );
