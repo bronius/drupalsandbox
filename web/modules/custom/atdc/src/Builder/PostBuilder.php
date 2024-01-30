@@ -8,6 +8,8 @@ use Drupal\node\NodeInterface;
 
 final class PostBuilder {
 
+  private bool $isPublished = TRUE;
+
   private ?DrupalDateTime $created = NULL;
 
   private string $title;
@@ -29,12 +31,27 @@ final class PostBuilder {
     return $this;
   }
 
+  public function isNotPublished(): self {
+    $this->isPublished = FALSE;
+    return $this;
+  }
+
+  public function isPublished(): self {
+    $this->isPublished = TRUE;
+    return $this;
+  }
+
   public function getPost(): NodeInterface {
     $post = Node::create([
-      'created' => $this->created?->getTimestamp(),
+      'status' => $this->isPublished,
       'title' => $this->title,
       'type' => 'post',
     ]);
+
+    if ($this->created !== NULL) {
+      $post->setCreatedTime(($this->created->getTimestamp()));
+    }
+
     $post->save();
     return $post;
   }

@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\atdc\Functional;
 
+use Drupal\atdc\Builder\PostBuilder;
 use Drupal\Tests\BrowserTestBase;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -33,4 +34,46 @@ class BlogPageTest extends BrowserTestBase {
     $assert->pageTextContains('Second post');
     $assert->pageTextContains('Third post');
   }
+
+  public function testOnlyPublishedNodesAreShown(): void {
+    PostBuilder::create()
+      ->setTitle('Post one')
+      ->isPublished()
+      ->getPost();
+
+    PostBuilder::create()
+      ->setTitle('Post two')
+      ->isNotPublished()
+      ->getPost();
+
+    PostBuilder::create()
+      ->setTitle('Post three')
+      ->isPublished()
+      ->getPost();
+
+    $this->drupalGet('/blog');
+
+    $assert = $this->assertSession();
+    $assert->pageTextContains('Post one');
+    $assert->pageTextNotContains('Post two');
+    $assert->pageTextContains('Post three');
+  }
+
+  public function testOnlyPostNodesAreShown(): void {
+    PostBuilder::create()->setTitle('Post one')->getPost();
+    PostBuilder::create()->setTitle('Post two')->getPost();
+
+    $this->createNode([
+      'title' => 'This is not a post',
+      'type' => 'page',
+    ]);
+
+    $this->drupalGet('/blog');
+
+    $assert = $this->assertSession();
+    $assert->pageTextContains('Post one');
+    $assert->pageTextContains('Post two');
+    $assert->pageTextNotContains('This is not a post');
+  }
+
 }
