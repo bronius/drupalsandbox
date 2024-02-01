@@ -1,0 +1,4 @@
+name: ATDC Test
+type: module
+core_version_requirement: ^10
+hidden: true
