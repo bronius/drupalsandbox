@@ -18,6 +18,7 @@ final class PostBuilderTest extends EntityKernelTestBase {
   /** @test */
   public function it_returns_a_published_post(): void {
 
+    $this->installEntitySchema('taxonomy_term');
     $this->installConfig(modules: [
       'atdc_test',
     ]);
@@ -35,6 +36,7 @@ final class PostBuilderTest extends EntityKernelTestBase {
   /** @test */
   public function it_returns_an_unpublished_post(): void {
 
+    $this->installEntitySchema('taxonomy_term');
     $this->installConfig(modules: [
       'atdc_test',
     ]);
@@ -52,6 +54,7 @@ final class PostBuilderTest extends EntityKernelTestBase {
   /** @test */
   public function it_returns_a_post_with_tags(): void {
 
+    $this->installEntitySchema('taxonomy_term');
     $this->installConfig(modules: [
       'atdc_test',
     ]);
